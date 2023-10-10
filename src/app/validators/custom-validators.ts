@@ -23,4 +23,22 @@ export class CustomValidators {
             return isInArray ? null: {invalidName: control.value};
         }
     }
+
+    static checkNotMinor() {
+        return (control: AbstractControl): ValidationErrors | null => {
+
+            return null;
+        }
+    }
+
+    static isPasswordValid() {
+        return (control: AbstractControl): ValidationErrors | null => {
+            // min 0 caratteri,
+            // almeno una maiuscola,
+            // almeno uno dei nipoti di paperino
+            // deve includere almeno due caratteri speciali (!€$?)
+            
+            return null;
+        }
+    }
 }

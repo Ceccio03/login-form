@@ -12,14 +12,21 @@ import { CustomValidators } from 'src/app/validators/custom-validators';
 })
 export class RegisterComponent {
   registerForm = this.fb.group({
-    userName: ['', [Validators.required]],
-    email: ['', [Validators.required]],
-    password: ['', Validators.required],
+    userName: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(20)]],
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, CustomValidators.isPasswordValid()]],
     country: [''],
-    yob: [new Date().getFullYear(), Validators.required],
+    yob: [new Date().getFullYear(), [Validators.required, CustomValidators.checkNotMinor()]],
     phoneNumber: [''],
     gender: ['']
   });
+
+  constructor(private fb: FormBuilder) { }
+
+  onSubmit() {
+    console.log(this.registerForm.valid);
+    console.log(this.registerForm.value);
+  }
 
   // profileForm = new FormGroup({
   //   firstName: new FormControl(''),
@@ -32,41 +39,41 @@ export class RegisterComponent {
   //   })
   // });
 
-  profileForm = this.fb.group({
-    firstName: ['', [Validators.required, Validators.minLength(3)]],
-    lastName: ['', [Validators.required, Validators.minLength(3), CustomValidators.checkFirstAndLastUppercase()]],
-    address: this.fb.group({
-      street: [''],
-      city: [''],
-      state: ['', CustomValidators.checkAddressUSA()],
-      zip: ['']
-    }),
-    aliases: this.fb.array([
-      this.fb.control('')
-    ])
-  });
+  // profileForm = this.fb.group({
+  //   firstName: ['', [Validators.required, Validators.minLength(3)]],
+  //   lastName: ['', [Validators.required, Validators.minLength(3), CustomValidators.checkFirstAndLastUppercase()]],
+  //   address: this.fb.group({
+  //     street: [''],
+  //     city: [''],
+  //     state: ['', CustomValidators.checkAddressUSA()],
+  //     zip: ['']
+  //   }),
+  //   aliases: this.fb.array([
+  //     this.fb.control('')
+  //   ])
+  // });
 
-  constructor(private fb: FormBuilder) { }
+  // constructor(private fb: FormBuilder) { }
 
-  onSubmit() {
-    console.warn(this.profileForm.value);
-  }
+  // onSubmit() {
+  //   console.warn(this.profileForm.value);
+  // }
 
-  updateProfile() {
-    this.profileForm.patchValue({
-      firstName: 'Nancy',
-      address: {
-        street: '123 Drew Street',
-        city: 'New York'
-      }
-    });
-  }
+  // updateProfile() {
+  //   this.profileForm.patchValue({
+  //     firstName: 'Nancy',
+  //     address: {
+  //       street: '123 Drew Street',
+  //       city: 'New York'
+  //     }
+  //   });
+  // }
 
-  getAliases() {
-    return this.profileForm.get('aliases') as FormArray;
-  }
+  // getAliases() {
+  //   return this.profileForm.get('aliases') as FormArray;
+  // }
 
-  addAlias() {
-    this.getAliases().push(this.fb.control(''));
-  }
+  // addAlias() {
+  //   this.getAliases().push(this.fb.control(''));
+  // }
 }
