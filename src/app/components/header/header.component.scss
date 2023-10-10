@@ -1,0 +1,22 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border: 2px solid black;
+    align-items: center;
+}
+
+span {
+    font-size: xx-large;
+    font-weight: bold;
+}
+
+nav {
+    display: flex;
+    gap: 8px;
+}
+
+a {
+    color: crimson;
+    font-size: large;
+}
