@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { CustomValidators } from 'src/app/validators/custom-validators';
 
 @Component({
   selector: 'app-register',
@@ -10,16 +11,42 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   styleUrls: ['./register.component.scss']
 })
 export class RegisterComponent {
-  profileForm = new FormGroup({
-    firstName: new FormControl(''),
-    lastName: new FormControl(''),
-    address: new FormGroup({
-      street: new FormControl(''),
-      city: new FormControl(''),
-      state: new FormControl(''),
-      zip: new FormControl('')
-    })
+  registerForm = this.fb.group({
+    userName: ['', [Validators.required]],
+    email: ['', [Validators.required]],
+    password: ['', Validators.required],
+    country: [''],
+    yob: [new Date().getFullYear(), Validators.required],
+    phoneNumber: [''],
+    gender: ['']
   });
+
+  // profileForm = new FormGroup({
+  //   firstName: new FormControl(''),
+  //   lastName: new FormControl(''),
+  //   address: new FormGroup({
+  //     street: new FormControl(''),
+  //     city: new FormControl(''),
+  //     state: new FormControl(''),
+  //     zip: new FormControl('')
+  //   })
+  // });
+
+  profileForm = this.fb.group({
+    firstName: ['', [Validators.required, Validators.minLength(3)]],
+    lastName: ['', [Validators.required, Validators.minLength(3), CustomValidators.checkFirstAndLastUppercase()]],
+    address: this.fb.group({
+      street: [''],
+      city: [''],
+      state: ['', CustomValidators.checkAddressUSA()],
+      zip: ['']
+    }),
+    aliases: this.fb.array([
+      this.fb.control('')
+    ])
+  });
+
+  constructor(private fb: FormBuilder) { }
 
   onSubmit() {
     console.warn(this.profileForm.value);
@@ -33,5 +60,13 @@ export class RegisterComponent {
         city: 'New York'
       }
     });
+  }
+
+  getAliases() {
+    return this.profileForm.get('aliases') as FormArray;
+  }
+
+  addAlias() {
+    this.getAliases().push(this.fb.control(''));
   }
 }
