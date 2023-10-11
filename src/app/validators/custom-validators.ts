@@ -26,19 +26,55 @@ export class CustomValidators {
 
     static checkNotMinor() {
         return (control: AbstractControl): ValidationErrors | null => {
+            const date = new Date().getFullYear();
 
-            return null;
+            if (date - control.value >= 18) {
+              return null;
+            }
+            return {invalidYob: control.value};
         }
     }
 
     static isPasswordValid() {
         return (control: AbstractControl): ValidationErrors | null => {
-            // min 0 caratteri,
-            // almeno una maiuscola,
-            // almeno uno dei nipoti di paperino
-            // deve includere almeno due caratteri speciali (!€$?)
+            const validCharacter = ['!', '£', '$', '@', '#', '*', '€'];
+            const validNephews = ['qui', 'quo', 'qua'];
+            const minLength = 8;
             
-            return null;
-        }
+            let uppercaseCount = 0;
+            let specialCharCount = 0;
+            let nephewCount = 0;
+        
+            for (let i = 0; i < control.value.length; i++) {
+                const char = control.value[i];
+        
+                if (validCharacter.includes(char)) {
+                    specialCharCount++;
+                }
+        
+                if (i < control.value.length - 2) {
+                    const substring = control.value.substr(i, 3).toLowerCase();
+
+                    if (validNephews.includes(substring)) {
+                        nephewCount++;
+                    }
+                }
+        
+                if (char === char.toUpperCase() && char !== char.toLowerCase()) {
+                    uppercaseCount++;
+                }
+            }
+        
+            if (
+                control.value.length >= minLength &&
+                uppercaseCount >= 1 &&
+                specialCharCount >= 2 &&
+                nephewCount >= 2
+            ) {
+                return null;
+            }
+        
+            return { invalidPassword: control.value };
+        };
     }
 }

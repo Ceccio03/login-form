@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/validators/custom-validators';
+import { LocalStorageService } from 'src/app/services/local-storage.service';
 
 @Component({
   selector: 'app-register',
@@ -21,11 +22,16 @@ export class RegisterComponent {
     gender: ['']
   });
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private storageServ: LocalStorageService) { }
 
   onSubmit() {
-    console.log(this.registerForm.valid);
-    console.log(this.registerForm.value);
+    if (this.registerForm.valid) {
+      const password = this.registerForm.get('password') ? this.registerForm.get('password')!.value : '';
+      console.log('Password:', password);
+  
+      // Ora puoi passare la password al tuo servizio
+      this.storageServ.savePassword(password!);
+    }
   }
 
   // profileForm = new FormGroup({
