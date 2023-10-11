@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormArray, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CustomValidators } from 'src/app/validators/custom-validators';
-import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-register',
@@ -22,7 +22,7 @@ export class RegisterComponent {
     gender: ['']
   });
 
-  constructor(private fb: FormBuilder, private storageServ: LocalStorageService) { }
+  constructor(private fb: FormBuilder, private storageServ: AuthService) { }
 
   onSubmit() {
     if (this.registerForm.valid) {

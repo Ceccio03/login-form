@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LocalStorageService } from 'src/app/services/local-storage.service';
+import { AuthService } from 'src/app/services/auth.service';
 import { CustomValidators } from 'src/app/validators/custom-validators';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -17,15 +18,16 @@ export class LoginComponent {
     password: ['', [Validators.required, CustomValidators.isPasswordValid()]],
   });
 
-  constructor(private fb: FormBuilder, private storageServ: LocalStorageService) { }
+  constructor(private fb: FormBuilder, private authServ: AuthService, private router: Router) { }
 
   onSubmit() {
-    if (this.loginForm.valid) {
-      const password = this.loginForm.get('password') ? this.loginForm.get('password')!.value : '';
-      console.log('Password:', password);
-  
-      // Ora puoi passare la password al tuo servizio
-      this.storageServ.savePassword(password!);
+    const isUserValid = this.authServ.checkUser(this.loginForm.value.userName as string, this.loginForm.value.password as string);
+
+    if (isUserValid.valid) {
+      this.authServ.saveLogin();
+      this.router.navigateByUrl('/secret');
+    } else {
+      alert(isUserValid.message);
     }
   }
 }
